@@ -1,0 +1,38 @@
+#include <DHT.h>
+#include <DHT_U.h>
+
+// Definición del pin donde está conectado el sensor
+const int PIN_DHT = 2;
+
+// Variables para almacenar los datos
+float temp;
+float hum;
+
+// Crear objeto del sensor
+DHT sensorDHT(PIN_DHT, DHT22);
+
+void setup() {
+  Serial.begin(9600);      // Iniciar comunicación serial
+  sensorDHT.begin();       // Iniciar el sensor
+}
+
+void loop() {
+
+  // Leer datos del sensor
+  temp = sensorDHT.readTemperature();
+  hum = sensorDHT.readHumidity();
+
+  // Verificar si la lectura falló
+  if (isnan(temp) || isnan(hum)) {
+    Serial.println("Error al leer el sensor DHT");
+  } 
+  else {
+    Serial.print("Temp: ");
+    Serial.print(temp);
+    Serial.print(" °C  |  Humedad: ");
+    Serial.print(hum);
+    Serial.println(" %");
+  }
+
+  delay(1000); // esperar 1 segundo antes de la siguiente lectura
+}

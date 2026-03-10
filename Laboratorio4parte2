@@ -1,0 +1,48 @@
+#include <LiquidCrystal.h>
+
+// Pines de la pantalla LCD: RS, E, D4, D5, D6, D7
+LiquidCrystal pantalla(7, 6, 5, 4, 3, 2);
+
+// Pin del sensor LM35
+const int pinLM35 = A0;
+
+// Variables
+int lecturaAnalogica = 0;
+float temperaturaC = 0.0;
+float acumulado = 0.0;
+float promedio = 0.0;
+
+void setup() {
+  pantalla.begin(16, 2);   // Inicializa LCD de 16 columnas y 2 filas
+}
+
+void loop() {
+  acumulado = 0;  // Reiniciar suma
+
+  // Tomar 5 lecturas
+  for (int contador = 0; contador < 5; contador++) {
+    lecturaAnalogica = analogRead(pinLM35);
+
+    // Convertir lectura a temperatura
+    temperaturaC = (lecturaAnalogica * 5.0 * 100.0) / 1023.0;
+
+    acumulado += temperaturaC;
+
+    delay(500);
+  }
+
+  // Calcular promedio
+  promedio = acumulado / 5.0;
+
+  // Mostrar en LCD
+  pantalla.clear();
+  pantalla.setCursor(0, 0);
+  pantalla.print("Temp prom:");
+
+  pantalla.setCursor(0, 1);
+  pantalla.print(promedio, 1);
+  pantalla.print((char)223); // simbolo de grado
+  pantalla.print("C");
+
+  delay(1000);
+}
